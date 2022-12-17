@@ -1,7 +1,5 @@
-console.log("Twimgdl is here!");
-
 let downloads = [];
-let isOnline = null;
+let isOnline = false;
 
 function clear() {
   downloads = [];
@@ -50,4 +48,3 @@ async function doThing() {
 
 setInterval(doThing, 500);
 setInterval(clear, 5000);
-setInterval(getStatus, 10000);
