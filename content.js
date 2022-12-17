@@ -1,6 +1,18 @@
 console.log("Twimgdl is here!");
 
 let downloads = [];
+let isOnline = null;
+
+function clear() {
+  downloads = [];
+}
+
+async function getStatus() {
+  isOnline = !!(await fetch("http://localhost:5000/status", {
+    method: "GET",
+  }));
+}
+getStatus();
 
 function DOMRegex(regex) {
   let output = [];
@@ -10,37 +22,32 @@ function DOMRegex(regex) {
   return output;
 }
 
-function doThing() {
+async function doThing() {
+  if (!isOnline) return;
   const elements = DOMRegex(/\/status\/[0-9]{10,25}\/photo\/[0-4]/);
-  console.log("---");
 
   for (const element of elements) {
-    const my = document.createElement("button");
+    const button = document.createElement("button");
     const segments = element.href.split("/");
     const myLink = `http://localhost:5000/tweet/${segments[5]}/${
       segments[7] - 1
     }`;
-    console.log(element, element.classList.contains("download"));
     if (element.classList.contains("download")) continue;
 
-    my.addEventListener("click", (e) => {
+    button.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log(myLink);
       if (downloads.includes(myLink)) return;
       downloads.push(myLink);
       fetch(myLink, { method: "GET" });
     });
 
-    my.innerText = "💾";
+    button.innerText = "💾";
 
-    element.appendChild(my);
+    element.appendChild(button);
     element.classList.add("download");
   }
 }
 
-function clear() {
-  downloads = [];
-}
-
 setInterval(doThing, 500);
 setInterval(clear, 5000);
+setInterval(getStatus, 10000);
