@@ -1,0 +1,13 @@
+.download button {
+  display: none;
+  position: absolute;
+  background-color: #000d;
+  top: 5px;
+  left: 5px;
+  padding: 0.3em;
+  font-size: 2em;
+}
+
+.download:hover button {
+  display: block;
+}
